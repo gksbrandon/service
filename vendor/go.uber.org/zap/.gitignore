@@ -1,12 +1,3 @@
-# Binaries
-app/services/sales-api/sales-api
-
-# Mac
-.DS_Store
-
-# Backup files
-*~*
-
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
 *.a
@@ -15,11 +6,7 @@ app/services/sales-api/sales-api
 # Folders
 _obj
 _test
-
-# Editor files
-.idea/
-*.iml
-*.swp
+vendor
 
 # Architecture specific extensions/prefixes
 *.[568vq]
@@ -34,5 +21,12 @@ _cgo_export.*
 _testmain.go
 
 *.exe
-//*.test
-.vscode/tasks.json
+*.test
+*.prof
+*.pprof
+*.out
+*.log
+
+/bin
+cover.out
+cover.html
