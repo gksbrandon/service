@@ -18,7 +18,7 @@ import (
 
 // Set of error variables for CRUD operations.
 var (
-	ErrNotFound              = errors.New("not found")
+	ErrDBNotFound            = errors.New("not found")
 	ErrDuplicatedEntry       = errors.New("duplicated entry")
 	ErrAuthenticationFailure = errors.New("authentication failed")
 	ErrForbidden             = errors.New("attempted action is not allowed")
@@ -147,7 +147,7 @@ func NamedQueryStruct(ctx context.Context, log *zap.SugaredLogger, db *sqlx.DB, 
 	defer rows.Close()
 
 	if !rows.Next() {
-		return ErrNotFound
+		return ErrDBNotFound
 	}
 
 	if err := rows.StructScan(dest); err != nil {
