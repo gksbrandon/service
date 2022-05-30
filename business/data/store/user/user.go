@@ -86,7 +86,7 @@ func (s Store) Update(ctx context.Context, claims auth.Claims, userID string, uu
 	usr, err := s.QueryByID(ctx, claims, userID)
 	if err != nil {
 		if errors.Is(err, database.ErrDBNotFound) {
-			return database.ErrDBNotFound
+			return ErrNotFound
 		}
 		return fmt.Errorf("updating user userID[%s]: %w", userID, err)
 	}
@@ -117,9 +117,9 @@ func (s Store) Update(ctx context.Context, claims auth.Claims, userID string, uu
     "email" = :email,
     "roles" = :roles,
     "password_hash" = :password_hash,
-    "date_updated" = :date_updated,
+    "date_updated" = :date_updated
   WHERE
-  user_id = :user_id`
+    user_id = :user_id`
 
 	if err := database.NamedExecContext(ctx, s.log, s.db, q, usr); err != nil {
 		return fmt.Errorf("inserting user: %w", err)
@@ -194,6 +194,11 @@ func (s Store) QueryByID(ctx context.Context, claims auth.Claims, userID string)
 		return User{}, ErrInvalidID
 	}
 
+	// If you are not an admin and looking to retrieve someone other than yourself.
+	if !claims.Authorized(auth.RoleAdmin) && claims.Subject != userID {
+		return User{}, database.ErrForbidden
+	}
+
 	data := struct {
 		UserID string `db:"user_id"`
 	}{
@@ -210,6 +215,9 @@ func (s Store) QueryByID(ctx context.Context, claims auth.Claims, userID string)
 
 	var usr User
 	if err := database.NamedQueryStruct(ctx, s.log, s.db, q, data, &usr); err != nil {
+		if err == database.ErrDBNotFound {
+			return User{}, ErrNotFound
+		}
 		return User{}, fmt.Errorf("selecting userID[%q]: %w", userID, err)
 	}
 
