@@ -18,6 +18,9 @@ SHELL := /bin/bash
 # export TOKEN=
 # curl -il -H "Authorization: Bearer ${TOKEN}" http://localhost:3000/v1/testauth
 
+# Database Access
+# dblab --host 0.0.0.0 --user postgres --db postgres --pass postgres --ssl disable --port 5432 --driver postgres
+
 # ==============================================================================
 run:
 	go run app/services/sales-api/main.go | go run app/tooling/logfmt/main.go
@@ -74,6 +77,8 @@ kind-load:
 
 # Kustomize patches our base with environment settings (like replicas, strategy, resource limits/quotas)
 kind-apply:
+	kustomize build zarf/k8s/kind/database-pod | kubectl apply -f -
+	kubectl wait --namespace=database-system --timeout=120s --for=condition=Available deployment/database-pod
 	kustomize build zarf/k8s/kind/sales-pod | kubectl apply -f -
 
 # Gets cluster status
@@ -85,6 +90,10 @@ kind-status:
 # Get cluster status for just sales
 kind-status-sales:
 	kubectl get pods -o wide --watch
+
+# Get cluster status for db
+kind-status-db:
+	kubectl get pods -o wide --watch --namespace=database-system
 
 # Query logs of a sales
 kind-logs:

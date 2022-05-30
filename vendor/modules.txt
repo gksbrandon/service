@@ -7,13 +7,18 @@ github.com/dimfeld/httptreemux/v5
 # github.com/golang-jwt/jwt/v4 v4.4.1
 ## explicit; go 1.16
 github.com/golang-jwt/jwt/v4
-# github.com/google/go-cmp v0.5.7
-## explicit; go 1.11
 # github.com/google/uuid v1.3.0
 ## explicit
 github.com/google/uuid
-# github.com/pkg/errors v0.9.1
-## explicit
+# github.com/jmoiron/sqlx v1.3.5
+## explicit; go 1.10
+github.com/jmoiron/sqlx
+github.com/jmoiron/sqlx/reflectx
+# github.com/lib/pq v1.10.6
+## explicit; go 1.13
+github.com/lib/pq
+github.com/lib/pq/oid
+github.com/lib/pq/scram
 # go.uber.org/atomic v1.9.0
 ## explicit; go 1.13
 go.uber.org/atomic
