@@ -13,12 +13,26 @@ SHELL := /bin/bash
 # openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048
 # openssl rsa -pubout -in private.pem -out public.pem
 
+# Testing Auth
+# curl -il http://localhost:3000/v1/testauth
+# export TOKEN=
+# curl -il -H "Authorization: Bearer ${TOKEN}" http://localhost:3000/v1/testauth
+
 # ==============================================================================
 run:
 	go run app/services/sales-api/main.go | go run app/tooling/logfmt/main.go
 
 admin:
 	go run app/tooling/admin/main.go
+
+# ==============================================================================
+# Running tests within the local computer
+
+test:
+	# count=1 means ignore the cache and run every time
+	go test ./... -count=1
+	# make sure linting
+	staticcheck -checks=all ./...
 
 # ==============================================================================
 # Building containers
