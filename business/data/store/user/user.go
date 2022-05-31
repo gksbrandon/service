@@ -85,7 +85,7 @@ func (s Store) Update(ctx context.Context, claims auth.Claims, userID string, uu
 
 	usr, err := s.QueryByID(ctx, claims, userID)
 	if err != nil {
-		if errors.Is(err, database.ErrDBNotFound) {
+		if errors.Is(err, database.ErrNotFound) {
 			return ErrNotFound
 		}
 		return fmt.Errorf("updating user userID[%s]: %w", userID, err)
@@ -215,7 +215,7 @@ func (s Store) QueryByID(ctx context.Context, claims auth.Claims, userID string)
 
 	var usr User
 	if err := database.NamedQueryStruct(ctx, s.log, s.db, q, data, &usr); err != nil {
-		if err == database.ErrDBNotFound {
+		if err == database.ErrNotFound {
 			return User{}, ErrNotFound
 		}
 		return User{}, fmt.Errorf("selecting userID[%q]: %w", userID, err)

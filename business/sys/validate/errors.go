@@ -52,6 +52,15 @@ func (fe FieldErrors) Error() string {
 	return string(d)
 }
 
+// Fields returns the fields that failed validation
+func (fe FieldErrors) Fields() map[string]string {
+	m := make(map[string]string)
+	for _, fld := range fe {
+		m[fld.Field] = fld.Error
+	}
+	return m
+}
+
 // Cause iterates throguh all the wrapped errors until the root
 // error value is reached.
 func Cause(err error) error {
